@@ -1,0 +1,56 @@
+sub count_word {
+    my ($string, $word) = @_;
+    my $count = 0;
+    
+    
+    while ($string =~ /\b\Q$word\E\b/g) {
+        $count++;
+    }
+    
+    return $count;
+}
+
+
+my $file_content = <<'END_TEXT';
+Perl is great. Perl is fast.
+Perl is a programming language.
+Perl is fun to learn.
+END_TEXT
+
+
+my %word_counts;
+
+
+foreach my $line (split(/\n/, $file_content)) {
+    chomp $line;  
+
+    
+    $line = lc($line);
+
+    
+    my @words = split(/\s+/, $line);
+    
+    foreach my $word (@words) {
+        
+        $word_counts{$word} += count_word($line, $word);
+    }
+}
+
+
+print "Word Occurrences in the Content:\n";
+foreach my $word (sort keys %word_counts) {
+    print "$word: $word_counts{$word}\n";
+}
+
+
+my $max_word = '';
+my $max_count = 0;
+foreach my $word (keys %word_counts) {
+    if ($word_counts{$word} > $max_count) {
+        $max_word = $word;
+        $max_count = $word_counts{$word};
+    }
+}
+
+
+print "\nThe most frequent word is: '$max_word' with $max_count occurrences.\n";
